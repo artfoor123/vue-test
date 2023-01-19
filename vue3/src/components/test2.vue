@@ -1,9 +1,9 @@
-<template >
-    <div>
-        <h1>{{ msg }}</h1>
-    </div>
+<template>
+  <div>
+    <h1>{{ msg }}</h1>
+    <!-- <b-button >change</b-button> -->
+  </div>
 </template>
 <script setup lang="ts">
-import { defineComponent} from 'vue';
-const msg = 'Component test2';
+const msg = "Component test2";
 </script>

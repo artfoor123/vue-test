@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <div class="row">
-      <div class="col-md-2" v-for="(item, index) in data.pokamon" :key="index">
+      <div class="col-md-2" v-for="(item, index) in data.pokemon" :key="index">
         <img :src="`${urlImg}${id + index + 1}.png`" alt="" />
         <p>{{ item.name }}</p>
       </div>
@@ -19,9 +19,9 @@
 import { ref, reactive, onMounted, defineComponent, watch } from "vue";
 import type { Ref } from "vue";
 import axios from "axios";
-interface TypePokamon {
+interface TypePokemon {
   name: string;
-  url: string;
+  url?: string;
 }
 export default defineComponent({
   setup: () => {
@@ -33,28 +33,26 @@ export default defineComponent({
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
     );
     const data = reactive({
-      pokamon: <TypePokamon[]>[],
-    });
-
-    watch(currentPage, async (): Promise<void> => {
-      await getPakamon(perPage.value, currentPage.value);
+      pokemon: <TypePokemon[]>[],
     });
     onMounted(
       async (): Promise<void> =>
-        await getPakamon(perPage.value, currentPage.value)
+        await getPokemon(perPage.value, currentPage.value)
     );
-
-    const getPakamon = async (limit: number, offset: number): Promise<void> => {
+    watch(currentPage, async (): Promise<void> => {
+      await getPokemon(perPage.value, currentPage.value);
+    });
+    const getPokemon = async (limit: number, offset: number): Promise<void> => {
       let setoffset: number = offset * limit - limit;
-      const getPakamon = await axios
+      const pokemon = await axios
         .get(
           `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${setoffset}`
         )
         .then((res) => {
           return res.data;
         });
-      data.pokamon = getPakamon.results;
-      rows.value = getPakamon.count;
+      data.pokemon = pokemon.results;
+      rows.value = pokemon.count;
       id.value = setoffset;
     };
 
